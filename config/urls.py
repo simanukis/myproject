@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+# pollsフォルダ内のviews.pyをインポート
+from polls import views as views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('views/', views.index,name='index'),   # views記載の関数のpathを追記
 ]
