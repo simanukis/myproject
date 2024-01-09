@@ -22,5 +22,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('polls.urls') ),   # pollsディレクトリ内のurls.pyの参照を定義
+    path('polls/', include('polls.urls') ),   # pollsディレクトリ内のurls.pyの参照を定義
 ]
