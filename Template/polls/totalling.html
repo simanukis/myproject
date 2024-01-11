@@ -1,0 +1,76 @@
+<!DOCTYPE html>{% extends './base.html' %}
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>HTML</title>
+    <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <span>文字を入力した後にボタンを押してください</span>
+    <br>
+    <input type="text" size="50" id="input_form">
+    <button type="button" onclick="clickBtn()">送信</button>
+
+    <!-- views.pyから渡された文字列を表示する。 -->
+    <br>
+    <span id="text"></span>
+
+    <script>
+        function clickBtn() {
+            var txt = document.getElementById("input_form").value;
+
+            $.ajax({
+                    url: "{% url 'polls:call_totalling' %}",
+                    method: 'GET',
+                    data: {
+                        "input_data": txt
+                    }, // 入力ファイル
+                    dataType: "xls", // Excelファイルを指定
+                    contentType: "application/json",
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("error")
+                    }
+                })
+                .done(function(data) {
+                    // views.pyのcall_write_data()にてreturnしたHttpResponse(data)のデータはここで取得できる。
+                    // フォームの下部に追記したspan部分の内容を書き換える。
+                    document.getElementById("text").textContent = data;
+                    console.log("Success");
+                });
+
+            // csrf_tokenの取得に使う
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // ヘッダにcsrf_tokenを付与する関数
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            };
+        }
+    </script>
+</body>
+
+</html>
