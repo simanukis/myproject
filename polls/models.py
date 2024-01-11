@@ -1,6 +1,9 @@
 from django.db import models
+# ユーザー認証
+from django.contrib.auth.models import User
 
 # Create your models here.
+
 class Polls(models.Model):
     syain_cd = models.IntegerField(
         verbose_name='',
