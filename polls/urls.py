@@ -3,7 +3,13 @@ from . import views
 
 app_name = 'polls'
 urlpatterns = [
-    path('', views.index, name='index'),
+    # path('', views.index, name='index'),
+    path('',views.Login,name='Login'),
+    path('logout',views.Logout,name='Logout'),
+    path('register', views.AccountRegistration.as_view(), name='register'),
+    path('home',views.home,name='home'),
+    
     # 以下を追記(views.callのcall_write_data()にデータを送信できるようにする)
     # path('ajax/', views.call_write_data, name='call_write_data'),
+
 ]
