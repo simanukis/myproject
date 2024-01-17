@@ -11,9 +11,9 @@ class AccountForm(forms.ModelForm):
         # ユーザー認証
         model = User
         # フィールド指定
-        fields = ('login_id','email','password')
+        fields = ('username','email','password')
         # フィールド名指定
-        labels = {'login_id':"ログインID",'email':"メールアドレス"}
+        labels = {'username':"ログインID",'email':"メールアドレス"}
 
 class AddAccountForm(forms.ModelForm):
     class Meta():

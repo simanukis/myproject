@@ -14,6 +14,7 @@ from django.http import HttpResponse
 # application/totalling.pyをインポートする
 # from .application import totalling
 # Create your views here.
+
 #ログイン
 def Login(request):
     # POST
@@ -41,8 +42,7 @@ def Login(request):
             return HttpResponse("ログインIDまたはパスワードが間違っています")
     # GET
     else:
-        return render(request, 'polls/login.html')
-    
+        return render(request, 'polls/login.html')    
 
 #ログアウト
 @login_required
@@ -55,7 +55,8 @@ def Logout(request):
 @login_required
 def home(request):
     params = {"login_ID":request.user,}
-    return render(request, "App_Folder_HTML/home.html",context=params)
+    # return render(request, "polls/home.html",context=params)
+    return render(request, "polls/index.html",context=params)
 
 #新規登録
 class  AccountRegistration(TemplateView):

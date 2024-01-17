@@ -1,8 +1,9 @@
 from django.urls import path
 from . import views
 
-app_name = 'polls'
-urlpatterns = [
+# app_name = 'polls'
+
+urlpatterns = [    
     # path('', views.index, name='index'),
     path('',views.Login,name='Login'),
     path('logout',views.Logout,name='Logout'),
