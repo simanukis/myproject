@@ -55,7 +55,6 @@ def Logout(request):
 @login_required
 def home(request):
     params = {"login_ID":request.user,}
-    # return render(request, "polls/home.html",context=params)
     return render(request, "polls/index.html",context=params)
 
 #新規登録
