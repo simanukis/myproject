@@ -110,8 +110,16 @@ SUNLT HOME
                     <li><a class="nav-link scrollto" href="#services">Services</a></li>
                     <li><a class="nav-link scrollto" href="#portfolio">Portfolio</a></li>
                     <li><a class="nav-link scrollto" href="#team">Team</a></li>
-                    <li><a class="nav-link scrollto" href="{% url 'Logout' %}">Logout</a></li>
+
+                    <li>
+                        {% if user.is_authenticated %}
+                        <h6 style="color: red">こんにちは &nbsp; {{ user.username }}さん &nbsp;&nbsp; <a href="{% url 'logout' %}">ログアウト</a> </h6>
+                        {% else %}
+                        <h1><a href="{% url 'login' %}">ログイン</a></h1>
+                        {% endif %}
+                    </li>
                 </ul>
+                
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>
             <!-- .navbar -->
@@ -710,7 +718,7 @@ SUNLT HOME
     </main>
     <!-- End #main -->
 
-        <!-- ======= Footer ======= -->
+    <!-- ======= Footer ======= -->
     <footer id="footer">
         <div class="footer-newsletter">
             <div class="container">
