@@ -1,30 +1,131 @@
-<!DOCTYPE html>{% extends './base.html' %} {% load static %}
+<!DOCTYPE html> 
+{% load static %}
+
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>HTML</title>
+    <title>給与集計</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
     <script type="text/javascript" src="{% static 'polls/js/script.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
-<body>
-    <span>文字を入力した後にボタンを押してください</span>
-    <br>
-    <input type="text" size="50" id="input_form">
-    <button type="button" onclick="clickBtn()">送信</button>
+<body class="text-center">
+    <h1 class="h3 mt-2 mb-3 font-weight-normal">給与集計</h1>
 
-    <!-- views.pyから渡された文字列を表示する。 -->
-    <br>
-    <span id="text"></span>
+    <label for="input_form">ファイルを選択した後にボタンを押してください</label>
+    <div>
+        <font color='red'>（jinji,kinsi,syainの各Excelファイルを選択する）</font>
+    </div>
+    
+    <!-- ファイルの複数選択。 -->
+    <script type="text/javascript">
+        function OnFileSelect(inputElement)
+        {
+            // ファイルリストを取得
+            var fileList = inputElement.files;
+            
+            // ファイルの数を取得
+            var fileCount = fileList.length;
 
+            // HTML文字列の生成
+            var fileListBody = "選択されたファイルの数 = " + fileCount + "<br/><br/>\r\n";
+
+            // 選択されたファイルの数だけ処理する
+            for (var i = 0; i < fileCount; i++){
+                // ファイルを取得
+                var file = fileList[i];
+
+                // ファイルの情報を文字列に格納
+                fileListBody += "[" + ( i + 1 ) + "ファイル目 ]<br/>\r\n";
+                fileListBody += "name             =" + file.name + "<br/>\r\n";
+                fileListBody += "type             =" + file.type + "<br/>\r\n";
+                fileListBody += "lastModifiedDate =" + file.lastModifiedDate + "<br/>\r\n";
+                fileListBody += "<br/>\r\n";
+            }
+            // 結果のHTMLを流し込む
+                document.getElementById("ID001").innerHTML = fileListBody;
+        }
+    </script>
+    
+    <br>
+
+    <form id="ajax_file_send" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" onchange="OnFileSelect(this)" id="input_form" accept=".xls" multiple>
+
+        <br>
+
+        <ul id="ID001"></ul>
+        <input class="btn btn-outline-primary my-1" type="submit" value="集計実行" required>
+        <input class="btn btn-outline-primary my-1" type="button" onclick="history.back()" value="HOMEへ戻る">
+    </form>
+    
+    <!-- サーバーへアップロードする。(Ajax) -->
+
+    <!-- Ajaxを利用するための定義 -->
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookie.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // クッキーが希望する名前で始まっているか
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken')
+
+        function csrfSafeMethod(method) {
+            // CSRFの保護が必要ないHTTPメソッド
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    </script>
+    
+    <!-- ファイルを送信するAjaxの本体 -->
+    <script>
+        $('#ajax_file_send').on('submit', function(e) {
+            e.preventDefault();
+            var fd = new FormData($("#ajax_file_send").get(0));
+            $.ajax({
+                'url': '{% url "ajax_file_send" %}'
+                'type': 'POST',
+                'data': fd,
+                'processData': false,
+                'contentType': false,
+                'dataType': 'json'
+            })
+            .done(function(response){
+                // Ajax通信が成功した場合に実行する処理
+            });
+        });
+    </script>
+    
+
+
+    <!-- 集計を実行する。(Ajax) -->
     <script>
         function clickBtn() {
             var txt = document.getElementById("input_form").value;
 
             $.ajax({
-                    url: "{% url 'polls:call_totalling' %}",
                     method: 'GET',
                     data: {
                         "input_data": txt

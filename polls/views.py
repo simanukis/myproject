@@ -4,9 +4,12 @@ from .forms import AccountForm, AddAccountForm #ユーザーアカウントフ�
 
 # ログイン・ログアウト処理に利用
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+
+# 給与集計処理に使用
+
 
 # HTTPResponseクラスをインポート
 from django.http import HttpResponse
@@ -15,7 +18,7 @@ from django.http import HttpResponse
 # from .application import totalling
 # Create your views here.
 
-#ログイン
+# ログイン
 def Login(request):
     # POST
     if request.method == 'POST':
@@ -105,6 +108,17 @@ class  AccountRegistration(TemplateView):
             
         return render(request,"polls/register.html",context=self.params)
 
+# 給与集計
+@login_required
+def totalling(request):
+    params = {"login_ID":request.user,}
+    return render(request, "polls/totalling.html",context=params)
+
+# ファイルアップロード
+def ajax_file_send(request):
+    print("OK")
+    d = {}
+    return JsonResponse(d)
 
 # View関数を任意に定義
 # def index(request):
