@@ -2,17 +2,22 @@ from django.shortcuts import render
 from django.views.generic import TemplateView #テンプレートタグ
 from .forms import AccountForm, AddAccountForm #ユーザーアカウントフォーム
 
-# ログイン・ログアウト処理に利用
+# ログイン・ログアウト処理に使用
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
+# ファイルアップロード・データフレーム化処理に使用
+# from .forms import FileUploadForm
+# import pandas as pd
+# from django.urls import reverse_lazy
+
 # 給与集計処理に使用
 
 
 # HTTPResponseクラスをインポート
-from django.http import HttpResponse
+# from django.http import HttpResponse
 
 # application/totalling.pyをインポートする
 # from .application import totalling
@@ -115,10 +120,25 @@ def totalling(request):
     return render(request, "polls/totalling.html",context=params)
 
 # ファイルアップロード
-def ajax_file_send(request):
-    print("OK")
-    d = {}
-    return JsonResponse(d)
+# class FileUploadView(FormView):
+#    template_name = 'polls/totalling.html'
+#    form_class = FileUploadForm
+#    success_url = reverse_lazy('file-upload')
+
+#    def form_valid(self, form):
+        # フォームから受け取ったデータをデータフレームへ変換
+        # ファイル形式に応じた読み込み
+#        filetype = form.cleaned_data['FileType']
+#        file = io.TextIOWrapper(from.cleaned_data['file'])
+        
+#        if filetype == 'xls':
+#            df = pd.read_excel(file, dtype=str, index_col=0)
+#        elif filetype == 'xlsx'
+#            df = pd.read_excel(file, dtype=str, index_col=0)
+        
+        # データフレームへの処理を記載
+
+
 
 # View関数を任意に定義
 # def index(request):

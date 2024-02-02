@@ -11,10 +11,9 @@ urlpatterns = [
     path('register', views.AccountRegistration.as_view(), name='register'),
     path('home', views.home, name='home'),
     path('totalling', views.totalling, name='totalling'),
-    path('ajax_file_send', views.ajax_file_send, name='ajax_file_send'),
+    # path('fileupload', views.ajax_file_send, name='file-upload'),
     
     # 以下を追記(views.callのcall_write_data()にデータを送信できるようにする)
     # path('ajax/', views.call_write_data, name='call_write_data'),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

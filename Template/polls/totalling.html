@@ -60,66 +60,11 @@
         <br>
 
         <ul id="ID001"></ul>
+        
         <input class="btn btn-outline-primary my-1" type="submit" value="集計実行" required>
         <input class="btn btn-outline-primary my-1" type="button" onclick="history.back()" value="HOMEへ戻る">
     </form>
     
-    <!-- サーバーへアップロードする。(Ajax) -->
-
-    <!-- Ajaxを利用するための定義 -->
-    <script>
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookie.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // クッキーが希望する名前で始まっているか
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        var csrftoken = getCookie('csrftoken')
-
-        function csrfSafeMethod(method) {
-            // CSRFの保護が必要ないHTTPメソッド
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
-    </script>
-    
-    <!-- ファイルを送信するAjaxの本体 -->
-    <script>
-        $('#ajax_file_send').on('submit', function(e) {
-            e.preventDefault();
-            var fd = new FormData($("#ajax_file_send").get(0));
-            $.ajax({
-                'url': '{% url "ajax_file_send" %}'
-                'type': 'POST',
-                'data': fd,
-                'processData': false,
-                'contentType': false,
-                'dataType': 'json'
-            })
-            .done(function(response){
-                // Ajax通信が成功した場合に実行する処理
-            });
-        });
-    </script>
-    
-
-
     <!-- 集計を実行する。(Ajax) -->
     <script>
         function clickBtn() {
