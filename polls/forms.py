@@ -24,6 +24,11 @@ class AddAccountForm(forms.ModelForm):
         model = Account
         fields = ('syain_name','syozoku',)
         labels = {'syain_name':"社員名",'syozoku':"所属",}
+
+# ファイルアップロード
+class FileUploadForm(forms.Form):
+    testfile = forms.FileField()
+    
         
 # ファイルアップロード
 # class FileUploadForm(forms.Form):
