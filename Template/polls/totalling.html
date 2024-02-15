@@ -53,7 +53,7 @@
     
     <br>
 
-    <form id="ajax_file_send" action="" method="post" enctype="multipart/form-data">
+    <form id="ajax_file_send" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" onchange="OnFileSelect(this)" id="input_form" accept=".xls" multiple>
 
