@@ -27,8 +27,8 @@ class AddAccountForm(forms.ModelForm):
 
 # ファイルアップロード
 class FileUploadForm(forms.Form):
-    testfile = forms.FileField()
-    
+    # pollsfile = forms.FileField()
+    file = forms.FileField()
         
 # ファイルアップロード
 # class FileUploadForm(forms.Form):

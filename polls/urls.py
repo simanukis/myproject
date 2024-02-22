@@ -11,9 +11,8 @@ urlpatterns = [
     path('register', views.AccountRegistration.as_view(), name='register'),
     path('home', views.home, name='home'),
     path('totalling', views.totalling, name='totalling'),
-    # path('fileupload', views.ajax_file_send, name='file-upload'),
+    path('index_file', views.index_file, name='index_file'),
     
     # 以下を追記(views.callのcall_write_data()にデータを送信できるようにする)
     # path('ajax/', views.call_write_data, name='call_write_data'),
 ]
-

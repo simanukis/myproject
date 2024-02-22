@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 # ファイルアップロード・データフレーム化処理に使用
+from django.template import loader
 from .forms import FileUploadForm
 from .functions import process_file,to_csv
 import io
@@ -17,12 +18,10 @@ import pandas as pd
 # from django.urls import reverse_lazy
 
 # 給与集計処理に使用
-
-# HTTPResponseクラスをインポート
-# from django.http import HttpResponse
-
 # application/totalling.pyをインポートする
 # from .application import totalling
+
+
 # Create your views here.
 
 # ログイン
@@ -121,6 +120,19 @@ def totalling(request):
     params = {"login_ID":request.user,}
     return render(request, "polls/totalling.html",context=params)
 
+# アップロードされたファイルの処理
+def index_file(request):
+    if request.method == 'POST':
+        upload = FileUploadForm(request.POST, request.FILES)
+        if upload.is_valid():
+            data = pd.read_csv(io.StringIO(request.FILES['file'].read().decode('utf-8')), delimiter=',')
+            df = process_file(data)
+            
+            response = to_csv(df)
+        else:
+            upload = FileUploadForm()
+            return render(request, "totalling.html", {'form':upload})
+        
 # ファイルアップロード
 # class FileUploadView(FormView):
 #    template_name = 'polls/totalling.html'
@@ -139,19 +151,6 @@ def totalling(request):
 #            df = pd.read_excel(file, dtype=str, index_col=0)
         
         # データフレームへの処理を記載
-
-# アップロードされたファイルの処理
-def index(request):
-    if request.method == 'POST':
-        upload = FileUploadForm(request.POST, request.FILES)
-        if upload.is_valid():
-            data = pd.read_csv(io.StringIO(request.FILES['testfile'].read().decode('utf-8')), delimiter=',')
-            df = process_file(data)
-            
-            response = to_csv(df)
-        else:
-            upload = FileUploadForm()
-            return render(request, "totalling.html", {'form':upload})
 
 # View関数を任意に定義
 # def index(request):
