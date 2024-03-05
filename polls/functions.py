@@ -305,7 +305,7 @@ def process_file(data):
     # 給与データフレームと各区分データフレームを結合する
     # 役員
     df_yakuin_m = pd.merge(df_yakuin_kbn, kinsi_s,
-                        how='inner',on='社員ｺｰﾄﾞ')
+                    how='inner',on='社員ｺｰﾄﾞ')
     # 一般管理
     df_ipan_m = pd.merge(df_ipan_kbn, kinsi_s,
                         how='inner', on='社員ｺｰﾄﾞ')

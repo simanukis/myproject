@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 # ファイルアップロード・データフレーム化処理に使用
 from django.template import loader
 from .forms import FileUploadForm
-from .functions import process_file,to_csv
+from .functions import process_file, to_csv
 import io
 import pandas as pd
 
@@ -20,7 +20,6 @@ import pandas as pd
 # 給与集計処理に使用
 # application/totalling.pyをインポートする
 # from .application import totalling
-
 
 # Create your views here.
 
