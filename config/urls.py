@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 # pollsフォルダ内のviews.pyをインポート
-# from polls import views as views
+from polls import views as views
 
 urlpatterns = [
     path('admin/', admin.site.urls),

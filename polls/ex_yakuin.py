@@ -1,5 +1,5 @@
 import pandas as pd
-from . import functions
+import polls.functions
 
 from pandas.core.tools.times import time
 

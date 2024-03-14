@@ -289,5 +289,6 @@
         "yakuin",
         "yukyu",
         "zure"
-    ]
+    ],
+    "python.analysis.typeCheckingMode": "basic"
 }
