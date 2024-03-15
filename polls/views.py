@@ -8,10 +8,13 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
+# application/functions.pyをインポートする
+from .application import functions
+
 # ファイルアップロード・データフレーム化処理に使用
 from django.template import loader
 from .forms import FileUploadForm
-from .functions import process_file, to_csv
+
 import io
 import pandas as pd
 
@@ -133,19 +136,12 @@ def totalling(request):
 
 
 # アップロードされたファイルの処理
-def index_file(request):
-    if request.method == "POST":
-        upload = FileUploadForm(request.POST, request.FILES)
-        if upload.is_valid():
-            data = pd.read_csv(
-                io.StringIO(request.FILES["file"].read().decode("utf-8")), delimiter=","
-            )
-            df = process_file(data)
-
-            response = to_csv(df)
-        else:
-            upload = FileUploadForm()
-            return render(request, "totalling.html", {"form": upload})
+def function(request):
+    if request.method == "GET":
+        # functions.pyのwrite_csv()メソッドを呼び出す。
+        # ajaxで送信したデータのうち"input_data"を指定して取得する。
+        functions.df_change(request.GET.get("input_data"))
+        return HttpResponse()
 
 
 # ファイルアップロード

@@ -7,92 +7,39 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>給与集計</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-    <!-- <script type="text/javascript" src="{% static 'polls/js/script.js' %}"></script> -->
-    
+    <link rel='stylesheet' type='text/css' href="{% static 'style.css' %}"/>
+    <script type="text/javascript" src="{% static 'script.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body class="text-center">
-    <h1 class="h3 mt-2 mb-3 font-weight-normal">給与集計</h1>
-
-    <label for="input_form">ファイルを選択した後にボタンを押してください</label>
-    <div>
-        <font color='red'>（jinji,kinsi,syainの各Excelファイルを選択する）</font>
-    </div>
-    
-    <!-- ファイルの複数選択。 -->
-    <script type="text/javascript">
-        function OnFileSelect(inputElement)
-        {
-            // ファイルリストを取得
-            var fileList = inputElement.files;
-            
-            // ファイルの数を取得
-            var fileCount = fileList.length;
-
-            // HTML文字列の生成
-            var fileListBody = "選択されたファイルの数 = " + fileCount + "<br/><br/>\r\n";
-
-            // 選択されたファイルの数だけ処理する
-            for (var i = 0; i < fileCount; i++){
-                // ファイルを取得
-                var file = fileList[i];
-
-                // ファイルの情報を文字列に格納
-                fileListBody += "[" + ( i + 1 ) + "ファイル目 ]<br/>\r\n";
-                fileListBody += "name             =" + file.name + "<br/>\r\n";
-                fileListBody += "type             =" + file.type + "<br/>\r\n";
-                fileListBody += "lastModifiedDate =" + file.lastModifiedDate + "<br/>\r\n";
-                fileListBody += "<br/>\r\n";
-            }
-            // 結果のHTMLを流し込む
-                document.getElementById("ID001").innerHTML = fileListBody;
-        }
-    </script>
-    
+    <span>文字を入力した後にボタンを押してください</span>
     <br>
+    <input type="text" size="50" id="input_form">
+    <button type="button" onclick="clickBtn()">送信</button>
 
-    <form id="ajax_file_send" action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" onchange="OnFileSelect(this)" id="input_form" accept=".xls" multiple>
-
-        <br>
-
-        <ul id="ID001"></ul>
-        
-        <input class="btn btn-outline-primary my-1" type="submit" value="集計実行" required>
-        <input class="btn btn-outline-primary my-1" type="button" onclick="history.back()" value="HOMEへ戻る">
-    </form>
-    
-    <!-- 集計を実行する。(Ajax) -->
     <script>
         function clickBtn() {
             var txt = document.getElementById("input_form").value;
 
             $.ajax({
-                    method: 'GET',
-                    data: {
-                        "input_data": txt
-                    }, // 入力ファイル
-                    dataType: "xls", // Excelファイルを指定
-                    contentType: "application/json",
-                    beforeSend: function(xhr, settings) {
-                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("error")
+                url: "{% url 'polls:function' %}",
+                method: 'GET',
+                data: {"input_data": txt},
+                dataType: "text",
+                contentType: "application/json",
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrf_token);
                     }
-                })
-                .done(function(data) {
-                    // views.pyのcall_write_data()にてreturnしたHttpResponse(data)のデータはここで取得できる。
-                    // フォームの下部に追記したspan部分の内容を書き換える。
-                    document.getElementById("text").textContent = data;
-                    console.log("Success");
-                });
+                },
+                error: function(xhr, status, error) {
+                    console.log("error")
+                }
+            })
+            .done(function(data) {
+                console.log("Success"); 
+            });
 
             // csrf_tokenの取得に使う
             function getCookie(name) {
@@ -101,7 +48,7 @@
                     var cookies = document.cookie.split(';');
                     for (var i = 0; i < cookies.length; i++) {
                         var cookie = jQuery.trim(cookies[i]);
-                        // Does this cookie string begin with the name we want?
+                        // このクッキーは希望する名前で始まっているか?
                         if (cookie.substring(0, name.length + 1) === (name + '=')) {
                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                             break;
@@ -113,7 +60,7 @@
 
             // ヘッダにcsrf_tokenを付与する関数
             function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
+                // これらのHTTPメソッドにはCSRFの保護は必要ありません
                 return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
             };
         }
