@@ -20,7 +20,7 @@ SUNLT HOME
                                 <!-- <li><a href="#">Drop Down 1</a></li> -->
                                 <li class="dropdown"><a href="#"><span>総務</span><i class="bi bi-chevron-right"></i></a>
                                     <ul>
-                                        <li><a href="{% url 'totalling' %}">給与集計情報</a></li>
+                                        <li><a href="{% url 'polls:totalling' %}">給与集計情報</a></li>
                                         
                                         <li><a href="hello_python.html">テスト</a></li>
                                         <li><a href="index_cal_car.html">社用車予約情報</a></li>
@@ -114,9 +114,9 @@ SUNLT HOME
 
                     <li>
                         {% if user.is_authenticated %}
-                        <h6 style="color: red">こんにちは &nbsp; {{ user.username }}さん &nbsp;&nbsp; <a href="{% url 'logout' %}">ログアウト</a> </h6>
+                        <h6 style="color: red">こんにちは &nbsp; {{ user.username }}さん &nbsp;&nbsp; <a href="{% url 'polls:logout' %}">ログアウト</a> </h6>
                         {% else %}
-                        <h1><a href="{% url 'login' %}">ログイン</a></h1>
+                        <h1><a href="{% url 'polls:login' %}">ログイン</a></h1>
                         {% endif %}
                     </li>
                 </ul>

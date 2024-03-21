@@ -11,7 +11,7 @@
 <body class="text-center">
     <h1 class="h3 mt-2 mb-3 font-weight-normal">ログイン</h1>
 
-    <form class="w-25 mx-auto" action="{% url 'login' %}" method="post">
+    <form class="w-25 mx-auto" action="{% url 'polls:login' %}" method="post">
         {% csrf_token %}
 
         <label for="login_id" class="sr-only"></label>
@@ -25,7 +25,7 @@
     </form>
 
     <h6 class="mt-2 mb-3 text-muted">アカウントをお持ちですか？：
-        <a href="{% url 'register' %}">アカウントを作成</a>
+        <a href="{% url 'polls:register' %}">アカウントを作成</a>
     </h6>
 
     <p class="mt-2 mb-3 text-muted">&copy; 2024</p>

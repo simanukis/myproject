@@ -3,7 +3,7 @@ from django.conf.urls.static import static  # 追加
 from django.urls import path
 from . import views
 
-# app_name = 'polls'
+app_name = "polls"
 urlpatterns = [
     # path('', views.index, name='index'),
     path("", views.Login, name="login"),

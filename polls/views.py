@@ -45,7 +45,7 @@ def Login(request):
                 # ログイン
                 login(request, user)
                 # ホームページ遷移
-                return HttpResponseRedirect(reverse("home"))
+                return HttpResponseRedirect(reverse("polls:home"))
             else:
                 # アカウント利用不可
                 return HttpResponse("アカウントが有効ではありません")

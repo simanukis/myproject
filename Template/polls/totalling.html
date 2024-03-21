@@ -23,7 +23,7 @@
             var txt = document.getElementById("input_form").value;
 
             $.ajax({
-                url: "{% url 'polls:function' %}",
+                url: "{% url 'functions' %}",
                 method: 'GET',
                 data: {"input_data": txt},
                 dataType: "text",
