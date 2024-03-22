@@ -1,18 +1,28 @@
 import pandas as pd
 import numpy as np
 import sklearn, csv, re, os
+import xlrd
+import glob
+import csv
+import sys
+import openpyxl as op
+
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-
-# from django.http import HTTPResponse
-# from myproject.settings import BASE_DIR
+from ctypes import alignment
+from openpyxl import Workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.styles import PatternFill, Border, Side, Font, numbers
+from openpyxl.formatting.rule import Rule
+from openpyxl.styles.differential import DifferentialStyle
+from openpyxl.styles.alignment import Alignment
 
 
 # ファイルを指定してデータフレーム化
 def df_change(data):
-    df_jinji = pd.read_excel("/content/drive/MyDrive/data/jinji.XLS")
+    df_jinji = pd.read_excel("c:/test/jinji.XLS")
     df_jinji = df_jinji.drop(columns=["社員名", "集計区分－１        "])
-    df_syain = pd.read_excel("/content/drive/MyDrive/data/syain.XLS")
+    df_syain = pd.read_excel("c:/test/syain.XLS")
     df_syain = df_syain.drop(
         columns=[
             "氏 名",
@@ -326,7 +336,7 @@ def df_change(data):
         columns={"所 ": "所属1", "所 .1": "所属2", "所 .2": "所属3"}
     )
     # 給与データファイルのデータフレーム化
-    df_kinsi = pd.read_excel("/content/drive/MyDrive/data/kinsi11-2023.XLS")
+    df_kinsi = pd.read_excel("c:/test/kinsi.XLS")
     df_kinsi = df_kinsi.drop(columns=df_kinsi.columns[[16, 41, 61]], axis=1)
     df_kinsi = df_kinsi.dropna(how="any")
     df_kinsi.drop(
@@ -560,7 +570,7 @@ def df_change(data):
     df_yakuin_1 = df_yakuin_1.sum()
     # 仮CSVファイルの出力（Excel出力のため)
     df_yakuin_1.to_csv(
-        "/content/drive/MyDrive/data/一般管理/A.csv",
+        "c:/test/一般管理/A.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -749,7 +759,7 @@ def df_change(data):
     df_ipan_1 = df_ipan_1.drop("集計区分－２        ", axis=1)
     df_ipan_1 = df_ipan_1.sum()
     df_ipan_1.to_csv(
-        "/content/drive/MyDrive/data/一般管理/B.csv",
+        "c:/test/一般管理/B.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -938,7 +948,7 @@ def df_change(data):
     df_ipan_2 = df_ipan_2.drop("集計区分－２        ", axis=1)
     df_ipan_2 = df_ipan_2.sum()
     df_ipan_2.to_csv(
-        "/content/drive/MyDrive/data/一般管理/C.csv",
+        "c:/test/一般管理/C.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -1127,7 +1137,7 @@ def df_change(data):
     df_ipan_3 = df_ipan_3.drop("集計区分－２        ", axis=1)
     df_ipan_3 = df_ipan_3.sum()
     df_ipan_3.to_csv(
-        "/content/drive/MyDrive/data/一般管理/D.csv",
+        "c:/test/一般管理/D.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -1316,7 +1326,7 @@ def df_change(data):
     df_ipan_6 = df_ipan_6.drop("集計区分－２        ", axis=1)
     df_ipan_6 = df_ipan_6.sum()
     df_ipan_6.to_csv(
-        "/content/drive/MyDrive/data/一般管理/E.csv",
+        "c:/test/一般管理/E.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -1505,7 +1515,7 @@ def df_change(data):
     df_ipan_h_1 = df_ipan_h_1.drop("集計区分－２        ", axis=1)
     df_ipan_h_1 = df_ipan_h_1.sum()
     df_ipan_h_1.to_csv(
-        "/content/drive/MyDrive/data/一般管理/F.csv",
+        "c:/test/一般管理/F.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -1694,7 +1704,7 @@ def df_change(data):
     df_ipan_h_2 = df_ipan_h_2.drop("集計区分－２        ", axis=1)
     df_ipan_h_2 = df_ipan_h_2.sum()
     df_ipan_h_2.to_csv(
-        "/content/drive/MyDrive/data/一般管理/G.csv",
+        "c:/test/一般管理/G.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -1859,7 +1869,7 @@ def df_change(data):
     df_tanzo_k_1 = df_tanzo_k_1.drop("集計区分－２        ", axis=1)
     df_tanzo_k_1 = df_tanzo_k_1.sum()
     df_tanzo_k_1.to_csv(
-        "/content/drive/MyDrive/data/鍛造/A.csv",
+        "c:/test/鍛造/A.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -2024,7 +2034,7 @@ def df_change(data):
     df_tanzo_k_2 = df_tanzo_k_2.drop("集計区分－２        ", axis=1)
     df_tanzo_k_2 = df_tanzo_k_2.sum()
     df_tanzo_k_2.to_csv(
-        "/content/drive/MyDrive/data/鍛造/B.csv",
+        "c:/test/鍛造/B.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -2189,7 +2199,7 @@ def df_change(data):
     df_tanzo_k_3 = df_tanzo_k_3.drop("集計区分－２        ", axis=1)
     df_tanzo_k_3 = df_tanzo_k_3.sum()
     df_tanzo_k_3.to_csv(
-        "/content/drive/MyDrive/data/鍛造/C.csv",
+        "c:/test/鍛造/C.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -2353,7 +2363,7 @@ def df_change(data):
     df_tanzo_k_4 = df_tanzo_k_4.drop("集計区分－２        ", axis=1)
     df_tanzo_k_4 = df_tanzo_k_4.sum()
     df_tanzo_k_4.to_csv(
-        "/content/drive/MyDrive/data/鍛造/D.csv",
+        "c:/test/鍛造/D.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -2518,7 +2528,7 @@ def df_change(data):
     df_tanzo_k_5 = df_tanzo_k_5.drop("集計区分－２        ", axis=1)
     df_tanzo_k_5 = df_tanzo_k_5.sum()
     df_tanzo_k_5.to_csv(
-        "/content/drive/MyDrive/data/鍛造/E.csv",
+        "c:/test/鍛造/E.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -2683,7 +2693,7 @@ def df_change(data):
     df_tanzo_k_6 = df_tanzo_k_6.drop("集計区分－２        ", axis=1)
     df_tanzo_k_6 = df_tanzo_k_6.sum()
     df_tanzo_k_6.to_csv(
-        "/content/drive/MyDrive/data/鍛造/F.csv",
+        "c:/test/鍛造/F.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -2847,7 +2857,7 @@ def df_change(data):
     df_tanzo_t_1 = df_tanzo_t_1.drop("集計区分－２        ", axis=1)
     df_tanzo_t_1 = df_tanzo_t_1.sum()
     df_tanzo_t_1.to_csv(
-        "/content/drive/MyDrive/data/鍛造/G.csv",
+        "c:/test/鍛造/G.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -3012,7 +3022,7 @@ def df_change(data):
     df_tanzo_t_4 = df_tanzo_t_4.drop("集計区分－２        ", axis=1)
     df_tanzo_t_4 = df_tanzo_t_4.sum()
     df_tanzo_t_4.to_csv(
-        "/content/drive/MyDrive/data/鍛造/H.csv",
+        "c:/test/鍛造/H.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -3177,7 +3187,7 @@ def df_change(data):
     df_sesaku_k_1 = df_sesaku_k_1.drop("集計区分－２        ", axis=1)
     df_sesaku_k_1 = df_sesaku_k_1.sum()
     df_sesaku_k_1.to_csv(
-        "/content/drive/MyDrive/data/切削/A.csv",
+        "c:/test/切削/A.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -3341,7 +3351,7 @@ def df_change(data):
     df_sesaku_k_2 = df_sesaku_k_2.drop("集計区分－２        ", axis=1)
     df_sesaku_k_2 = df_sesaku_k_2.sum()
     df_sesaku_k_2.to_csv(
-        "/content/drive/MyDrive/data/切削/B.csv",
+        "c:/test/切削/B.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -3505,7 +3515,7 @@ def df_change(data):
     df_sesaku_k_4 = df_sesaku_k_4.drop("集計区分－２        ", axis=1)
     df_sesaku_k_4 = df_sesaku_k_4.sum()
     df_sesaku_k_4.to_csv(
-        "/content/drive/MyDrive/data/切削/C.csv",
+        "c:/test/切削/C.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -3670,7 +3680,7 @@ def df_change(data):
     df_sesaku_k_5 = df_sesaku_k_5.drop("集計区分－２        ", axis=1)
     df_sesaku_k_5 = df_sesaku_k_5.sum()
     df_sesaku_k_5.to_csv(
-        "/content/drive/MyDrive/data/切削/D.csv",
+        "c:/test/切削/D.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -3835,7 +3845,7 @@ def df_change(data):
     df_sesaku_k_6 = df_sesaku_k_6.drop("集計区分－２        ", axis=1)
     df_sesaku_k_6 = df_sesaku_k_6.sum()
     df_sesaku_k_6.to_csv(
-        "/content/drive/MyDrive/data/切削/E.csv",
+        "c:/test/切削/E.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -4000,7 +4010,7 @@ def df_change(data):
     df_sesaku_t_1 = df_sesaku_t_1.drop("集計区分－２        ", axis=1)
     df_sesaku_t_1 = df_sesaku_t_1.sum()
     df_sesaku_t_1.to_csv(
-        "/content/drive/MyDrive/data/切削/F.csv",
+        "c:/test/切削/F.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -4165,7 +4175,7 @@ def df_change(data):
     df_sesaku_t_2 = df_sesaku_t_2.drop("集計区分－２        ", axis=1)
     df_sesaku_t_2 = df_sesaku_t_2.sum()
     df_sesaku_t_2.to_csv(
-        "/content/drive/MyDrive/data/切削/G.csv",
+        "c:/test/切削/G.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -4330,7 +4340,7 @@ def df_change(data):
     df_sesaku_t_4 = df_sesaku_t_4.drop("集計区分－２        ", axis=1)
     df_sesaku_t_4 = df_sesaku_t_4.sum()
     df_sesaku_t_4.to_csv(
-        "/content/drive/MyDrive/data/切削/H.csv",
+        "c:/test/切削/H.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -4495,7 +4505,7 @@ def df_change(data):
     df_ac_k_1 = df_ac_k_1.drop("集計区分－２        ", axis=1)
     df_ac_k_1 = df_ac_k_1.sum()
     df_ac_k_1.to_csv(
-        "/content/drive/MyDrive/data/AC/A.csv",
+        "c:/test/AC/A.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -4660,7 +4670,7 @@ def df_change(data):
     df_ac_k_2 = df_ac_k_2.drop("集計区分－２        ", axis=1)
     df_ac_k_2 = df_ac_k_2.sum()
     df_ac_k_2.to_csv(
-        "/content/drive/MyDrive/data/AC/B.csv",
+        "c:/test/AC/B.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -4825,7 +4835,7 @@ def df_change(data):
     df_ac_k_4 = df_ac_k_4.drop("集計区分－２        ", axis=1)
     df_ac_k_4 = df_ac_k_4.sum()
     df_ac_k_4.to_csv(
-        "/content/drive/MyDrive/data/AC/C.csv",
+        "c:/test/AC/C.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -4990,7 +5000,7 @@ def df_change(data):
     df_ac_k_5 = df_ac_k_5.drop("集計区分－２        ", axis=1)
     df_ac_k_5 = df_ac_k_5.sum()
     df_ac_k_5.to_csv(
-        "/content/drive/MyDrive/data/AC/D.csv",
+        "c:/test/AC/D.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -5155,7 +5165,7 @@ def df_change(data):
     df_ac_t_1 = df_ac_t_1.drop("集計区分－２        ", axis=1)
     df_ac_t_1 = df_ac_t_1.sum()
     df_ac_t_1.to_csv(
-        "/content/drive/MyDrive/data/AC/E.csv",
+        "c:/test/AC/E.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -5320,7 +5330,7 @@ def df_change(data):
     df_ac_t_4 = df_ac_t_4.drop("集計区分－２        ", axis=1)
     df_ac_t_4 = df_ac_t_4.sum()
     df_ac_t_4.to_csv(
-        "/content/drive/MyDrive/data/AC/F.csv",
+        "c:/test/AC/F.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -5485,7 +5495,7 @@ def df_change(data):
     df_pc_k_1 = df_pc_k_1.drop("集計区分－２        ", axis=1)
     df_pc_k_1 = df_pc_k_1.sum()
     df_pc_k_1.to_csv(
-        "/content/drive/MyDrive/data/PC/A.csv",
+        "c:/test/PC/A.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -5650,7 +5660,7 @@ def df_change(data):
     df_pc_k_2 = df_pc_k_2.drop("集計区分－２        ", axis=1)
     df_pc_k_2 = df_pc_k_2.sum()
     df_pc_k_2.to_csv(
-        "/content/drive/MyDrive/data/PC/B.csv",
+        "c:/test/PC/B.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -5815,7 +5825,7 @@ def df_change(data):
     df_pc_k_4 = df_pc_k_4.drop("集計区分－２        ", axis=1)
     df_pc_k_4 = df_pc_k_4.sum()
     df_pc_k_4.to_csv(
-        "/content/drive/MyDrive/data/PC/C.csv",
+        "c:/test/PC/C.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -5980,7 +5990,7 @@ def df_change(data):
     df_pc_k_5 = df_pc_k_5.drop("集計区分－２        ", axis=1)
     df_pc_k_5 = df_pc_k_5.sum()
     df_pc_k_5.to_csv(
-        "/content/drive/MyDrive/data/PC/D.csv",
+        "c:/test/PC/D.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -6145,7 +6155,7 @@ def df_change(data):
     df_pc_k_6 = df_pc_k_6.drop("集計区分－２        ", axis=1)
     df_pc_k_6 = df_pc_k_6.sum()
     df_pc_k_6.to_csv(
-        "/content/drive/MyDrive/data/PC/E.csv",
+        "c:/test/PC/E.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -6310,7 +6320,7 @@ def df_change(data):
     df_pc_t_1 = df_pc_t_1.drop("集計区分－２        ", axis=1)
     df_pc_t_1 = df_pc_t_1.sum()
     df_pc_t_1.to_csv(
-        "/content/drive/MyDrive/data/PC/F.csv",
+        "c:/test/PC/F.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -6475,7 +6485,7 @@ def df_change(data):
     df_pc_t_4 = df_pc_t_4.drop("集計区分－２        ", axis=1)
     df_pc_t_4 = df_pc_t_4.sum()
     df_pc_t_4.to_csv(
-        "/content/drive/MyDrive/data/PC/G.csv",
+        "c:/test/PC/G.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -6640,7 +6650,7 @@ def df_change(data):
     df_miyagi_k_1 = df_miyagi_k_1.drop("集計区分－２        ", axis=1)
     df_miyagi_k_1 = df_miyagi_k_1.sum()
     df_miyagi_k_1.to_csv(
-        "/content/drive/MyDrive/data/宮城/A.csv",
+        "c:/test/宮城/A.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -6805,7 +6815,7 @@ def df_change(data):
     df_miyagi_k_2 = df_miyagi_k_2.drop("集計区分－２        ", axis=1)
     df_miyagi_k_2 = df_miyagi_k_2.sum()
     df_miyagi_k_2.to_csv(
-        "/content/drive/MyDrive/data/宮城/B.csv",
+        "c:/test/宮城/B.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -6970,7 +6980,7 @@ def df_change(data):
     df_miyagi_k_4 = df_miyagi_k_4.drop("集計区分－２        ", axis=1)
     df_miyagi_k_4 = df_miyagi_k_4.sum()
     df_miyagi_k_4.to_csv(
-        "/content/drive/MyDrive/data/宮城/C.csv",
+        "c:/test/宮城/C.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -7135,7 +7145,7 @@ def df_change(data):
     df_miyagi_k_6 = df_miyagi_k_6.drop("集計区分－２        ", axis=1)
     df_miyagi_k_6 = df_miyagi_k_6.sum()
     df_miyagi_k_6.to_csv(
-        "/content/drive/MyDrive/data/宮城/D.csv",
+        "c:/test/宮城/D.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -7300,7 +7310,7 @@ def df_change(data):
     df_miyagi_t_1 = df_miyagi_t_1.drop("集計区分－２        ", axis=1)
     df_miyagi_t_1 = df_miyagi_t_1.sum()
     df_miyagi_t_1.to_csv(
-        "/content/drive/MyDrive/data/宮城/E.csv",
+        "c:/test/宮城/E.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -7467,7 +7477,7 @@ def df_change(data):
     df_jyusetu_k_2 = df_jyusetu_k_2.drop("集計区分－２        ", axis=1)
     df_jyusetu_k_2 = df_jyusetu_k_2.sum()
     df_jyusetu_k_2.to_csv(
-        "/content/drive/MyDrive/data/住設/A.csv",
+        "c:/test/住設/A.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -7634,7 +7644,7 @@ def df_change(data):
     df_jyusetu_k_4 = df_jyusetu_k_4.drop("集計区分－２        ", axis=1)
     df_jyusetu_k_4 = df_jyusetu_k_4.sum()
     df_jyusetu_k_4.to_csv(
-        "/content/drive/MyDrive/data/住設/B.csv",
+        "c:/test/住設/B.csv",
         header=True,
         index=False,
         encoding="shift-jis",
@@ -7801,8 +7811,13 @@ def df_change(data):
     df_jyusetu_k_6 = df_jyusetu_k_6.drop("集計区分－２        ", axis=1)
     df_jyusetu_k_6 = df_jyusetu_k_6.sum()
     df_jyusetu_k_6.to_csv(
-        "/content/drive/MyDrive/data/住設/C.csv",
+        "c:/test/住設/C.csv",
         header=True,
         index=False,
         encoding="shift-jis",
     )
+
+    # csvファイルの結合
+    # 一般管理
+    # パスで指定したファイルの一覧をリスト形式で取得
+    csv_files_ipan = glob.glob("c:/test/一般管理/*.csv")

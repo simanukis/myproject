@@ -136,7 +136,7 @@ def totalling(request):
 
 
 # アップロードされたファイルの処理
-def function(request):
+def call_function_data(request):
     if request.method == "GET":
         # functions.pyのwrite_csv()メソッドを呼び出す。
         # ajaxで送信したデータのうち"input_data"を指定して取得する。

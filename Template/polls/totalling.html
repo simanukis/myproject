@@ -13,17 +13,17 @@
 </head>
 
 <body class="text-center">
-    <span>文字を入力した後にボタンを押してください</span>
+    <span>実行ボタンを押してください</span>
     <br>
     <input type="text" size="50" id="input_form">
-    <button type="button" onclick="clickBtn()">送信</button>
+    <button type="button" onclick="clickBtn()">実行</button>
 
     <script>
         function clickBtn() {
             var txt = document.getElementById("input_form").value;
 
             $.ajax({
-                url: "{% url 'functions' %}",
+                url: "{% url 'polls:call_function_data' %}",
                 method: 'GET',
                 data: {"input_data": txt},
                 dataType: "text",
